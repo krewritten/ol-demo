@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/css/ol.css" type="text/css">
+    <style>
+        .map {
+            height: 1000px;
+            width: 1000px;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/build/ol.js"></script>
+    <title>OpenLayers example</title>
+</head>
+
+<body>
+    <h2>New Map!</h2>
+    <div id="map" class="map"></div>
+    <script type="text/javascript">
+        const style = new ol.style.Style({
+                stroke: new ol.style.Stroke({
+                color: 'rgba(255, 255, 255, 0.7)',
+                width: 2,
+            }),
+            });
+        // https://arcgis.metc.state.mn.us/server/rest/services/GISLibrary/LakesAndRivers/FeatureServer/0
+        const lakesAndRivers= new ol.layer.Vector({
+            source: new ol.source.Vector({
+                format: new ol.format.GeoJSON(),
+                url: 'lakes-rivers.geojson'
+            }),
+        });
+        // https://arcgis.metc.state.mn.us/server/rest/services/GISLibrary/Bikeways/FeatureServer/0
+        const bikePaths= new ol.layer.Vector({
+            source: new ol.source.Vector({
+                format: new ol.format.GeoJSON(),
+                url:'bikes.geojson'
+            }), style: new ol.style.Style({
+                fill: new ol.style.Stroke({
+                    color: "#FF5733",
+                }),
+                stroke: new ol.style.Stroke({
+                    color: "#FF5733",
+                    width: 2,
+                }),
+            }),
+        });
+
+        const map = new ol.Map({
+            target: 'map',
+            layers: [
+                new ol.layer.Tile({
+                    source: new ol.source.OSM()
+                }),
+                lakesAndRivers,
+                bikePaths
+            ],
+            view: new ol.View({
+                center: ol.proj.fromLonLat([-93.41, 44.92]),
+                zoom: 9
+            })
+        });
+    </script>
+    <button id="updater"></button>
+</body>
+
+</html>
